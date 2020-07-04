@@ -6,7 +6,7 @@
             type="checkbox"
             :value="answer.id"
             :checked="selectedId==answer.id"
-            @input="handleChange(answer.id)"
+            @click="(e)=>handleChange(e,answer.id)"
             
         />
     </span>
@@ -20,12 +20,19 @@ export default {
     }
     },
     methods:{
-        handleChange(answerId){
-            this.$emit("handleChange",answerId);  
+        isChecked(){
+            return this.selectedId==this.answer.id;
         },
-        inputHandler(e){
-            this.$emit('input',e.target.value);
-        }
+        handleChange(e,answerId){
+            if(!this.isChecked()){
+                this.$emit("handleChange",answerId);  
+
+            }
+            else {
+                this.$emit('handleChange', null);
+            }
+        },
+        
     }
 }
 </script>

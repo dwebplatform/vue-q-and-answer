@@ -6,6 +6,9 @@
       >
       <h3>Поздравляем вы закончили отвечать на вопросы</h3>
       <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Alias ex non repellat? Eos, debitis totam. Recusandae inventore commodi iste dolores numquam quia tempore magni, reprehenderit expedita, libero, harum error natus.</p>
+      <button v-on:click="getBack"
+      class="go-back-btn"
+      >Вернуться к списку вопросов</button>
       </div>
       <div v-if="!finishMode && questions.length" class="answers">
         <div class="question" >
@@ -33,22 +36,12 @@
               :checked="checked"
               :answer="answer"
             ></v-answer-after-check-item>
-            <!-- <span class="all-answers-item"
-                v-for="answer in questions[currentQuestionIndex].answers"
-    
-          :key="answer.id"
-          > 
-          
-          <p v-if="answer.isCorrect" style="background-color:green" >{{answer.val}}</p>
-          <p v-else-if="answer.id==checked[0] && !answer.isCorrect" style="background-color:red;" >{{answer.val}}</p>
-          <p v-else>{{answer.val}}</p>
-          <input type="checkbox"  v-model="checked" v-on:click="putAnswer(answer.id)" :value="answer.id"/>
-          
-          </span> -->
           </div>
         </div>
         <div class="next-btn"  v-if="!checkAnswerMode">       
-          <button  class="next-btn-el" v-on:click="checkAnswerStart">
+          <button  class="next-btn-el" 
+          :disabled="!selectedId"
+          v-on:click="checkAnswerStart">
             Ответить
           </button>
         </div>
@@ -92,9 +85,19 @@ export default {
             this.questions = data.body;
           }
   },
+
+    getBack(){
+      this.questions = [];
+      this.finishMode = false;
+      this.getQuestions();
+      
+    },
     putAnswer(id) {
+      
       this.checked = [];
-      this.selectedId = id;
+      console.log(id);
+       this.selectedId = id;
+
     },
     
     checkAnswerStart() {
@@ -183,6 +186,7 @@ body {
   line-height: 30px;
   border-radius: 6px;
   color: #fff;
+  cursor: pointer;
   margin: 0 6px 0 0;
 }
 input {
@@ -192,5 +196,16 @@ input {
 .finish-container{
   width: 100%;
   
+}
+.go-back-btn{
+  width:200px;
+  height: 30px;
+  line-height: 30px;
+  margin: 5px auto 0 0px ;
+  border: none;
+  border-radius: 6px;
+  background-color: #ff22ff;
+  color: #fff;
+  cursor: pointer;
 }
 </style>
