@@ -7,8 +7,8 @@
       <h3>Поздравляем вы закончили отвечать на вопросы</h3>
       <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Alias ex non repellat? Eos, debitis totam. Recusandae inventore commodi iste dolores numquam quia tempore magni, reprehenderit expedita, libero, harum error natus.</p>
       </div>
-      <div v-if="!finishMode" class="answers">
-        <div class="question">
+      <div v-if="!finishMode && questions.length" class="answers">
+        <div class="question" >
           {{ questions[currentQuestionIndex].question }}
         </div>
         <div class="variants">Варианты ответа:</div>
@@ -68,7 +68,7 @@
 <script>
 import AnswerItem from "./components/AnswerItem";
 import AnswetAfterCheckItem from "./components/AnswerAfterCheckItem";
-
+let API_URL='//localhost:5000';
 export default {
   name: "App",
   data() {
@@ -76,71 +76,27 @@ export default {
       currentQuestionIndex: 0,
       selectedId: null,
       checkAnswerMode: false,
-      
-      questions: [
-        {
-          id: 1,
-          question: "Как зовут змея из Гарри Поттера ?",
-          answers: [
-            {
-              id: 1,
-              val: "Линкольн",
-              isCorrect: false
-            },
-            {
-              id: 2,
-              val: "Рузвельд",
-              isCorrect: false
-            },
-            {
-              id: 3,
-              val: "Вашингтон",
-              isCorrect: true
-            },
-            {
-              id: 4,
-              val: "Рузвельд",
-              isCorrect: false
-            }
-          ]
-        },
-        {
-          id: 2,
-          question: "Настоящие имя Малфоя ?",
-          answers: [
-            {
-              id: 1,
-              val: "Линкольн",
-              isCorrect: false
-            },
-            {
-              id: 2,
-              val: "Рузвельд",
-              isCorrect: false
-            },
-            {
-              id: 3,
-              val: "Вашингтон",
-              isCorrect: true
-            },
-            {
-              id: 4,
-              val: "Рузвельд",
-              isCorrect: false
-            }
-          ]
-        }
-
-      ],
+      questions: [],
       checked: [],
       finishMode: false
     };
   },
+  mounted(){
+      this.getQuestions();
+    },
   methods: {
+    async getQuestions(){
+          let res = await fetch(`${API_URL}/api/questions`);
+          let data = await res.json();
+          if(!data.error){
+            this.questions = data.body;
+          }
+  },
     putAnswer(id) {
       this.checked = [];
       this.selectedId = id;
     },
+    
     checkAnswerStart() {
       this.checkAnswerMode = true;
     },
